@@ -134,8 +134,34 @@ rtrn = report_from_df(dp)
  
 # ===================================
 
+# faz a requisição passando os parâmetros
+response = requests.get(url_api+"?results=10&inc=location")
 
-#não completado
+# define o formato para JSON
+json = response.json()
+
+# converte para dataframe
+df = pd.DataFrame(json["results"])
+
+#normaliza o JSON
+dfn=pd.json_normalize(json["results"])
+
+#imprime país e estado
+print("país - estado")
+print(dfn['location.country']+" - "+dfn['location.state'])
+
+#função para agrupar dataframe por país e estado
+def df_group(df):
+    dfg = df.groupby(["location.country","location.state"])
+    return dfg
+
+#dataframe agrupado
+dfg = dfn.groupby(["location.country","location.state"])
+
+#imprime o dataframe
+print("dfg")
+for key, item in dfg:
+    print(dfg.get_group(key), "\n\n")
 
 
 
