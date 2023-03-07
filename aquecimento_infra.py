@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pandas as pd
 from pandas import json_normalize
-from pandas_profiling import ProfileReport
+from ydata_profiling import ProfileReport
 
 # função para criar uma string formatada a partir de um objeto JSON
 def jprint(obj):
