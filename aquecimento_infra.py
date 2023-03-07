@@ -23,9 +23,15 @@ file_name = 'dados/out.csv'
 # Etapa 1: Entendendo os dados
 # ===================================
 
+proxies = {
+   'http': 'http://proxy.rio.rj.gov.br:8080',
+   'https':'http://proxy.rio.rj.gov.br:8080',
+}
+
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'}
 
 def get_dic_dados(url):
-    response = requests.get(url)
+    response = requests.get(url,proxies=proxies)#,headers=headers)
     return response
 
 print("Atividade 1")
@@ -47,7 +53,7 @@ def get_dataframe(url, qtd, parameters):
     url_qtd_results = f'{url}?results={qtd}'
 
     # faz a requisição passando os parâmetros
-    response = requests.get(url_qtd_results, params=parameters)
+    response = requests.get(url_qtd_results, params=parameters,proxies=proxies)
 
     # define o formato para JSON
     json = response.json()
@@ -65,7 +71,7 @@ def get_df(url, qtd):
     url_qtd_results = f'{url}?results={qtd}'
 
     # faz a requisição passando os parâmetros
-    response = requests.get(url_qtd_results)
+    response = requests.get(url_qtd_results,proxies=proxies)
 
     # define o formato para JSON
     json = response.json()
@@ -135,7 +141,7 @@ rtrn = report_from_df(dp)
 # ===================================
 
 # faz a requisição passando os parâmetros
-response = requests.get(url_api+"?results=10&inc=location")
+response = requests.get(url_api+"?results=10&inc=location",proxies=proxies)
 
 # define o formato para JSON
 json = response.json()
@@ -163,7 +169,34 @@ print("dfg")
 for key, item in dfg:
     print(dfg.get_group(key), "\n\n")
 
+# ===================================
 
+#Etapa 7: Parametrizando seu código    
 
+# ===================================
+
+#função que recebe argumentos e executa uma query
+def custom_query(**kwargs):
+    #cria o dicionário de parâmetros
+    params = {}
+    #adiciona os argumentos recebidos ao dicionário
+    for key,value in kwargs.items():
+        params[key]=value
+    
+    #retorna a lista de parâmetros da query
+    return params
+
+#cria um parâmetro passando o argumento "gender=female"
+p = custom_query(gender="female")
+
+#imprime o parÂmetro criado com a função
+print(p)
+
+# passa o parâmetro e cria um dataframe a partir da query
+dfp = get_dataframe(url_api,5,p)
+
+#imprime o dataframe
+print("dataframe with params")
+print(dfp)
 
 
